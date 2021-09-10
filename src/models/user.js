@@ -19,7 +19,7 @@ module.exports = class User extends Sequelize.Model {
                 }
             },
             {
-                modelName:'User',
+                modelName:'user',
                 tableName:'users',
                 sequelize,
             }

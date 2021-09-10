@@ -9,6 +9,7 @@ const PORT = 3000;
 // const io = socketio.listen(server);
 const authRouter = require('./routes/auth');
 const postRouter = require('./routes/post');
+const commentRouter = require('./routes/comment');
 const {sequelize} = require('./models');
 
 app.use(express.json());
@@ -34,6 +35,7 @@ app.use(express.json());
 
 app.use('/auth',authRouter);
 app.use('/post', postRouter);
+app.use('/comment', commentRouter);
 
 
 sequelize.sync().then(() => {

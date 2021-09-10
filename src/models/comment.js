@@ -4,8 +4,9 @@ module.exports = class Comment extends Sequelize.Model {
     static init(sequelize) {
         return super.init(
             {
-                context: {
+                content: {
                     type:Sequelize.TEXT,
+                    allowNull:false,
                     comment:"댓글 내용"
                 },
                 class:{
@@ -28,7 +29,7 @@ module.exports = class Comment extends Sequelize.Model {
                 }
             },
             {
-                modelName:'Comment',
+                modelName:'comment',
                 tableName:'comments',
                 sequelize,
             }
@@ -37,7 +38,7 @@ module.exports = class Comment extends Sequelize.Model {
     static associate(db) {
         db.Comment.belongsTo(db.User);
         db.Comment.belongsTo(db.Post);
-        db.Comment.belongsTo(db.CommentGroup);
+        db.Comment.belongsTo(db.CommentGroup, {foreignKey: 'groupId'});
         db.Comment.belongsToMany(db.User, {through : 'logUserCommentLike'});
     }
 }

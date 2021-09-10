@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/signup', async (req,res) => {
     if(!req.body.login_id && !req.body.password && !req.body.nickname) {
-        res.status(404).json({message:"body"})
+        res.status(404).json({message:"body"});
     } else {
         const existUser = await User.findOne({
             where:{
@@ -14,7 +14,8 @@ router.post('/signup', async (req,res) => {
             }
         })
         if(existUser) {
-            throw new Error('이미 이메일이 있습니다.');
+            res.status(403).json('이미 있는 이메일');
+           return;
         }
         const hashPassword = await bcrypt.hash(req.body.password,10);
         const createUser = await User.create({

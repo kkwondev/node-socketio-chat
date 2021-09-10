@@ -10,14 +10,14 @@ module.exports = class Post extends Sequelize.Model {
                 }
             },
             {
-                modelName:'Post',
+                modelName:'post',
                 tableName:'posts',
                 sequelize,
             }
         )
     }
     static associate(db) {
-        db.Post.hasMany(db.CommentGroup);
+        // db.Post.hasMany(db.CommentGroup);
         db.Post.hasMany(db.Comment);
         db.Post.belongsTo(db.User);
     }

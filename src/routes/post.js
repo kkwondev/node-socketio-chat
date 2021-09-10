@@ -14,11 +14,12 @@ router.post('/addPost', async (req, res) => {
             }
         })
         if(!existUser) {
-            throw new Error('없는 회원입니다.');
+            res.status(403).json('없는 사람');
+            return;
         }
         const createPost = await Post.create({
             content: req.body.content,
-            UserId: req.body.id,
+            userId: req.body.id,
         })
         res.status(201).json(createPost)
     }

@@ -15,7 +15,7 @@ module.exports = class CommentGroup extends Sequelize.Model {
                 }
             },
             {
-                modelName:'CommentGroup',
+                modelName:'commentGroup',
                 tableName:'commentGroup',
                 sequelize
             }
@@ -23,6 +23,6 @@ module.exports = class CommentGroup extends Sequelize.Model {
     }
     static associate(db) {
         db.CommentGroup.belongsTo(db.Post);
-        db.CommentGroup.hasMany(db.Comment);
+        // db.CommentGroup.hasMany(db.Comment);
     }
 }
