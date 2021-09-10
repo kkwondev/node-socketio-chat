@@ -29,7 +29,7 @@ router.post('/addComment', async (req, res) => {
             res.status(403).json('없는글');
             return;
         }
-        const maxGroupId = await CommentGroup.max('groupId');
+        const maxGroupId = await CommentGroup.max('groupId', {where:{postId:req.body.postId}});
         const maxCommentGroupPost = await  CommentGroup.max('order', {where:{postId:req.body.postId}})
         const t = await sequelize.transaction();
         try {
