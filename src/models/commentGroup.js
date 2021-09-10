@@ -6,8 +6,8 @@ module.exports = class CommentGroup extends Sequelize.Model {
             {
                 groupId:{
                     type:Sequelize.INTEGER,
-                    autoIncrement: true,
-                    primaryKey: true
+                    // autoIncrement: true,
+                    // primaryKey: true
                 },
                 order:{
                     type:Sequelize.INTEGER,
@@ -22,6 +22,7 @@ module.exports = class CommentGroup extends Sequelize.Model {
         )
     }
     static associate(db) {
+        db.CommentGroup.belongsTo(db.Post);
         db.CommentGroup.hasMany(db.Comment);
     }
 }

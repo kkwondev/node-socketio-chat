@@ -17,6 +17,7 @@ module.exports = class Post extends Sequelize.Model {
         )
     }
     static associate(db) {
+        db.Post.hasMany(db.CommentGroup);
         db.Post.hasMany(db.Comment);
         db.Post.belongsTo(db.User);
     }
