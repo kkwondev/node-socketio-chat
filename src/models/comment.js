@@ -9,8 +9,8 @@ module.exports = class Comment extends Sequelize.Model {
                     comment:"댓글 내용"
                 },
                 class:{
-                    type:Sequelize.BOOLEAN,
-                    comment: "계층(부모:0,자식:1)"
+                    type:Sequelize.ENUM('COMMENT','REPLY'),
+                    comment: "계층(부모:COMMENT,자식:REPLY)"
                 },
                 order:{
                     type:Sequelize.INTEGER,
@@ -38,5 +38,6 @@ module.exports = class Comment extends Sequelize.Model {
         db.Comment.belongsTo(db.User);
         db.Comment.belongsTo(db.Post);
         db.Comment.belongsTo(db.CommentGroup);
+        db.Comment.belongsToMany(db.User, {through : 'logUserCommentLike'});
     }
 }
