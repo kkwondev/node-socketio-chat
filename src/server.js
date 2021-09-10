@@ -8,6 +8,7 @@ const server = http.createServer(app);
 const PORT = 3000;
 // const io = socketio.listen(server);
 const authRouter = require('./routes/auth');
+const postRouter = require('./routes/post');
 const {sequelize} = require('./models');
 
 app.use(express.json());
@@ -32,6 +33,7 @@ app.use(express.json());
 //     })
 
 app.use('/auth',authRouter);
+app.use('/post', postRouter);
 
 
 sequelize.sync().then(() => {
