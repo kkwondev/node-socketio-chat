@@ -29,38 +29,21 @@ router.post('/addComment', async (req, res) => {
             res.status(403).json('없는글');
             return;
         }
-        const t = await sequelize.transaction();
-        try {
-            const maxGroupId = await CommentGroup.max('groupId', {where:{postId:req.body.postId}});
-            const maxCommentGroupPost = await  CommentGroup.max('order', {where:{postId:req.body.postId}})
-            const createCommentGroup = await CommentGroup.create({
-                postId:req.body.postId,
-                groupId: maxGroupId ? maxGroupId + 1 : 1,
-                order:maxCommentGroupPost ? maxCommentGroupPost + 1 :1,
-            },{transaction:t})
-            const maxOrderId = await Comment.max('order', {where : {
-                    postId:createCommentGroup.postId
-                }});
-
             const createComment = await Comment.create({
-                groupId:createCommentGroup.groupId,
                 postId:req.body.postId,
                 userId:req.body.userId,
                 content:req.body.content,
-                order:maxOrderId ? maxOrderId +1 : 1,
-                class:'COMMENT'
-            },{transaction:t})
-            await t.commit();
-            res.status(201).json({data:createComment, maxOrderId});
-        }catch(e) {
-            await t.rollback();
-            res.status(e.status).json(e);
-        }
+            })
+            if(createComment) {
+                res.status(201).json({data:createComment});
+            } else {
+                res.status(500).json({data:"실패"})
+            }
     }
 })
 
 router.post('/addReply', async (req, res) => {
-    if (!req.body.postId || !req.body.userId || !req.body.content || !req.body.groupId) {
+    if (!req.body.postId || !req.body.userId || !req.body.content || !req.body.parentId) {
         res.status(404).json({message: "empty"});
     } else {
         const existUser = await User.findOne({
@@ -82,38 +65,30 @@ router.post('/addReply', async (req, res) => {
             return;
         }
 
-        const existComment = await Comment.findOne(({
+        const existComment = await Comment.findOne({
             where:{
                 postId:req.body.postId,
-                groupId:req.body.groupId
+                id:req.body.parentId,
             }
-        }))
+        })
         if(!existComment) {
             res.status(403).json({data: "없는 댓글"})
+            return;
         }
-        const t = await sequelize.transaction();
-        try {
-            const maxOrderId = await Comment.max('order', {
-                where:{
-                   postId:req.body.postId,
-                    groupId:req.body.groupId
-                }
-            })
             const createComment = await Comment.create({
-                groupId:req.body.groupId,
+                parentId:req.body.parentId,
                 postId:req.body.postId,
                 userId:req.body.userId,
                 content:req.body.content,
-                order:maxOrderId ? maxOrderId +1 : 1,
+                // order:maxOrderId ? maxOrderId +1 : 1,
                 class:'REPLY'
-            },{transaction:t})
-            await t.commit();
-            res.status(201).json({data:createComment, maxOrderId});
-        }catch(e) {
-            await t.rollback();
-            res.status(e.status || 500).json(e);
+            })
+            if(createComment) {
+                res.status(201).json({data:createComment,existComment});
+            } else {
+                res.status(500).json({data:"실패"})
+            }
         }
-    }
 })
 
 module.exports = router;

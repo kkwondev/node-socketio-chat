@@ -18,7 +18,6 @@ const sequelize = new Sequelize(
 db.User = user
 db.Post = post
 db.Comment = comment
-db.CommentGroup = commentGroup
 
 Object.keys(db).forEach(modelName => {
     db[modelName].init(sequelize)
