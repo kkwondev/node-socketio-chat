@@ -81,7 +81,7 @@ router.post('/addReply', async (req, res) => {
                 userId:req.body.userId,
                 content:req.body.content,
                 // order:maxOrderId ? maxOrderId +1 : 1,
-                class:'REPLY'
+                // class:'REPLY'
             })
             if(createComment) {
                 res.status(201).json({data:createComment,existComment});
@@ -89,6 +89,42 @@ router.post('/addReply', async (req, res) => {
                 res.status(500).json({data:"실패"})
             }
         }
+})
+
+router.post('/allComment',async (req,res) => {
+    if(!req.body.postId) {
+        res.status(404).json({body: 'empty'})
+    } else {
+        const comment = await Comment.findAll({
+            where:{
+                postId:req.body.postId,
+                parentId:null
+            }
+        })
+        if(comment) {
+            res.json(comment)
+        } else {
+            res.status(404).json({data:'empty'})
+        }
+    }
+})
+
+router.post('/replyComment',async (req,res) => {
+    if(!req.body.postId || !req.body.parentId) {
+        res.status(404).json({body: 'empty'})
+    } else {
+        const comment = await Comment.findAll({
+            where:{
+                postId:req.body.postId,
+                parentId:req.body.parentId
+            }
+        })
+        if(comment) {
+            res.json(comment)
+        } else {
+            res.status(404).json({data:'empty'})
+        }
+    }
 })
 
 module.exports = router;
